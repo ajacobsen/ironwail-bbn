@@ -468,6 +468,8 @@ void SV_ReadClientMove (usercmd_t *move)
 	host_client->edict->v.button2 = (bits & 2)>>1;
 	// BBN: bit 4 = secattack (+secattack), kept in sync with CL_SendMove()
 	host_client->edict->v.button1 = (bits & 4)>>2;
+	// BBN: bit 8 = dash (+dash)
+	host_client->edict->v.button3 = (bits & 8) ? 1 : 0;
 
 	i = MSG_ReadByte ();
 	if (i)

@@ -57,10 +57,10 @@ kbutton_t	in_left, in_right, in_forward, in_back;
 kbutton_t	in_lookup, in_lookdown, in_moveleft, in_moveright;
 kbutton_t	in_strafe, in_speed, in_use, in_jump, in_attack;
 kbutton_t	in_secattack;
+kbutton_t	in_dash;
 kbutton_t	in_up, in_down;
 
 int			in_impulse;
-
 
 void KeyDown (kbutton_t *b)
 {
@@ -173,6 +173,9 @@ void IN_AttackUp(void) {KeyUp(&in_attack);}
 
 void IN_SecAttackDown(void) {KeyDown(&in_secattack);}
 void IN_SecAttackUp(void) {KeyUp(&in_secattack);}
+
+void IN_DashDown (void) {KeyDown(&in_dash);}
+void IN_DashUp (void) {KeyUp(&in_dash);}
 
 void IN_UseDown (void) {KeyDown(&in_use);}
 void IN_UseUp (void) {KeyUp(&in_use);}
@@ -433,10 +436,15 @@ void CL_SendMove (const usercmd_t *cmd)
 			bits |= 2;
 		in_jump.state &= ~2;
 
-		// BBN: bit 4 = secattack (+secattack); vanilla only uses bits 0-1
+		// BBN: bit 4 = secattack (+secattack)
 		if (in_secattack.state & 3)
 			bits |= 4;
 		in_secattack.state &= ~2;
+
+		// BBN: bit 8 = dash (+dash)
+		if (in_dash.state & 3)
+			bits |= 8;
+		in_dash.state &= ~2;
 
 		MSG_WriteByte (&buf, bits);
 
@@ -499,6 +507,8 @@ void CL_InitInput (void)
 	Cmd_AddCommand ("-attack", IN_AttackUp);
 	Cmd_AddCommand ("+secattack", IN_SecAttackDown);
 	Cmd_AddCommand ("-secattack", IN_SecAttackUp);
+	Cmd_AddCommand ("+dash", IN_DashDown); // BBN
+	Cmd_AddCommand ("-dash", IN_DashUp); // BBN
 	Cmd_AddCommand ("+use", IN_UseDown);
 	Cmd_AddCommand ("-use", IN_UseUp);
 	Cmd_AddCommand ("+jump", IN_JumpDown);
