@@ -3287,7 +3287,8 @@ storesetup:
 				com_nightdivedir[0] = '\0';
 			}
 			
-			host_parms->userdir = com_userprefdir;
+			if (!COM_CheckParm ("-nohome"))
+				host_parms->userdir = com_userprefdir;
 
 			return;
 		}
